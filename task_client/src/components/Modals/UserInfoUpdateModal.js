@@ -1,4 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
 
 const UserInfoUpdateModal = ({ user, setUser, onSuccessfullUpdate }) => {
   const [sectors, setSectors] = useState([]);
@@ -14,7 +15,7 @@ const UserInfoUpdateModal = ({ user, setUser, onSuccessfullUpdate }) => {
   };
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/v1/sectors")
+    fetch("https://simple-task-server.vercel.app/api/v1/sectors")
       .then((res) => res.json())
       .then((data) => setSectors(data));
   }, []);
@@ -27,13 +28,16 @@ const UserInfoUpdateModal = ({ user, setUser, onSuccessfullUpdate }) => {
       userWork: userWork,
     };
 
-    fetch(`http://localhost:5000/api/v1/user-infos/${user._id}`, {
-      method: "PATCH",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(updatedUserInfo),
-    })
+    const userUpdatePromise = fetch(
+      `https://simple-task-server.vercel.app/api/v1/user-infos/${user._id}`,
+      {
+        method: "PATCH",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(updatedUserInfo),
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
@@ -42,6 +46,12 @@ const UserInfoUpdateModal = ({ user, setUser, onSuccessfullUpdate }) => {
           setUser(null);
         }
       });
+
+    toast.promise(userUpdatePromise, {
+      loading: "Please wait..",
+      success: "Your information updated successfully",
+      error: "Error when fetching",
+    });
   };
 
   return (

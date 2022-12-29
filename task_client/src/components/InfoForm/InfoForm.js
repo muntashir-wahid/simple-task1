@@ -1,27 +1,32 @@
 import React, { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
 
 const InfoForm = ({ onSaveInfo }) => {
   const [sectors, setSectors] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/v1/sectors")
+    fetch("https://simple-task-server.vercel.app/api/v1/sectors")
       .then((res) => res.json())
       .then((data) => setSectors(data));
   }, []);
 
   const submitHandler = (event) => {
     event.preventDefault();
+
     const form = event.target;
     const name = form.name.value;
     const sector = form.sector.value;
     const info = { name, sector };
-    fetch("http://localhost:5000/api/v1/user-infos", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(info),
-    })
+    const saveUserPromise = fetch(
+      "https://simple-task-server.vercel.app/api/v1/user-infos",
+      {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(info),
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         if (data._id) {
@@ -29,6 +34,12 @@ const InfoForm = ({ onSaveInfo }) => {
           form.reset();
         }
       });
+
+    toast.promise(saveUserPromise, {
+      loading: "Please wait..",
+      success: "Your information saved successfully",
+      error: "Error when fetching",
+    });
   };
 
   return (

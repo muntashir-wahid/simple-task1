@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { Toaster } from "react-hot-toast";
 import Header from "./components/Header/Header";
 import InfoForm from "./components/InfoForm/InfoForm";
 import InfoTable from "./components/InfoTable/InfoTable";
@@ -7,7 +8,9 @@ function App() {
   const { isLoading, data, refetch } = useQuery({
     queryKey: ["userInfos"],
     queryFn: async () => {
-      const res = await fetch("http://localhost:5000/api/v1/user-infos");
+      const res = await fetch(
+        "https://simple-task-server.vercel.app/api/v1/user-infos"
+      );
       const data = await res.json();
       return data;
     },
@@ -26,6 +29,7 @@ function App() {
           onSuccessfullAction={refetch}
         />
       </section>
+      <Toaster position="top-center" reverseOrder={false} />
     </main>
   );
 }
