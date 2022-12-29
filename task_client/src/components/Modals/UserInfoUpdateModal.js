@@ -25,7 +25,7 @@ const UserInfoUpdateModal = ({ user, setUser, onSuccessfullUpdate }) => {
 
     const updatedUserInfo = {
       name: userName,
-      userWork: userWork,
+      sector: userWork,
     };
 
     const userUpdatePromise = fetch(
@@ -40,7 +40,6 @@ const UserInfoUpdateModal = ({ user, setUser, onSuccessfullUpdate }) => {
     )
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
         if (data.acknowledged && data.modifiedCount) {
           onSuccessfullUpdate();
           setUser(null);
@@ -79,7 +78,6 @@ const UserInfoUpdateModal = ({ user, setUser, onSuccessfullUpdate }) => {
                 type="text"
                 name="name"
                 onChange={userNameChangeHandler}
-                value={userName}
                 placeholder={user.name}
                 className="input input-bordered w-full"
               />
@@ -102,7 +100,7 @@ const UserInfoUpdateModal = ({ user, setUser, onSuccessfullUpdate }) => {
             </div>
 
             <div className="form-control mt-4">
-              <input type="submit" value="save" className="btn btn-primary" />
+              <input type="submit" value="Update" className="btn btn-primary" />
             </div>
           </form>
         </div>
